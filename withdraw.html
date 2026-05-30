@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Withdraw Money | DepositHub</title>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* ========== NAVIGATION BAR ========== */
+        .navbar {
+            background: linear-gradient(135deg, #0a2e25 0%, #1a5a4a 100%);
+            border-radius: 20px;
+            padding: 15px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .logo i {
+            background: #ff9800;
+            padding: 8px;
+            border-radius: 12px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: #ff9800;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+        }
+
+        .balance-badge {
+            background: #ff9800;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            padding: 8px 18px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #ff9800;
+        }
+
+        /* ========== MAIN CONTAINER ========== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ========== GRID LAYOUT ========== */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        /* ========== CARDS ========== */
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: #1a5a4a;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Balance Card */
+        .balance-card {
+            background: linear-gradient(135deg, #1a5a4a 0%, #0a2e25 100%);
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .balance-card h2 {
+            color: white;
+            border-bottom-color: rgba(255,255,255,0.2);
+        }
+
+        .balance-amount {
+            font-size: 56px;
+            font-weight: 800;
+            margin: 20px 0;
+            letter-spacing: 2px;
+        }
+
+        .balance-label {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* ========== FORM STYLES ========== */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-group label i {
+            margin-right: 8px;
+            color: #ff9800;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: #f8fafc;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: #ff9800;
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255,152,0,0.1);
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 40px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-withdraw {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .btn-withdraw:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(239,68,68,0.3);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #1a5a4a;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e1;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: #e8f0fe;
+            padding: 15px;
+            border-radius: 16px;
+            margin-top: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .info-box i {
+            color: #ff9800;
+            font-size: 20px;
+        }
+
+        /* ========== TABLE STYLES ========== */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .withdrawal-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .withdrawal-table th {
+            text-align: left;
+            padding: 12px;
+            background: #f1f5f9;
+            color: #1a5a4a;
+            font-weight: 600;
+        }
+
+        .withdrawal-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        /* Status Badges */
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .status-processing {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+            display: block;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #dc2626;
+            border-left: 4px solid #dc2626;
+            display: block;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid #17a2b8;
+            display: block;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.show {
+            display: flex;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 400px;
+            width: 90%;
+            padding: 30px;
+            text-align: center;
+            animation: slideUp 0.3s;
+        }
+
+        .modal-content i {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .confirm-yes {
+            background: #ef4444;
+            color: white;
+        }
+
+        .confirm-no {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            .navbar {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .nav-links {
+                justify-content: center;
+            }
+            
+            .balance-amount {
+                font-size: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="logo">
+        <i class="fas fa-money-bill-wave"></i>
+        <span>Trust Deposit</span>
+    </div>
+    <div class="nav-links">
+        <a href="web deposit.html"><i class="fas fa-download"></i> Deposit</a>
+        <a href="withdraw.html" class="active"><i class="fas fa-upload"></i> Withdraw</a>
+        <a href="Web transaction.html"><i class="fas fa-history"></i> Transactions</a>
+        <a href="Web log+depos.html"><i class="fas fa-user"></i> Profile</a>
+    </div>
+    <div class="user-menu">
+        <span class="balance-badge" id="balanceDisplay"><i class="fas fa-wallet"></i> TZS 0</span>
+        <span><i class="fas fa-user"></i> <span id="userName">user account</span></span>
+        <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+</div>
+
+<div class="container">
+    <div class="grid-2">
+        <!-- Left Column: Withdrawal Form -->
+        <div>
+            <!-- Balance Card -->
+            <div class="card balance-card">
+                <h2><i class="fas fa-wallet"></i> Available Balance</h2>
+                <div class="balance-amount" id="balanceAmount">TZS 0</div>
+                <div class="balance-label">Available for withdrawal</div>
+            </div>
+
+            <!-- Withdrawal Form Card -->
+            <div class="card">
+                <h2><i class="fas fa-hand-holding-usd"></i> Request Withdrawal</h2>
+                
+                <div id="alertMessage" class="alert"></div>
+                
+                <form id="withdrawForm">
+                    <div class="form-group">
+                        <label><i class="fas fa-coins"></i> Amount (TZS)</label>
+                        <input type="number" id="amount" placeholder="Enter amount to withdraw" min="1000" step="500" required>
+                        <small>Minimum: TZS 1,000 | Maximum: TZS 1,000,000</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-globe"></i> Mobile Network</label>
+                        <select id="network" required>
+                            <option value="">-- Select Network --</option>
+                            <option value="M-Pesa">📱 M-Pesa</option>
+                            <option value="Airtel Money">📱 Airtel Money</option>
+                            <option value="Tigo Pesa">📱 Tigo Pesa</option>
+                            <option value="HaloPesa">📱 HaloPesa</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-user-check"></i> Account Name</label>
+                        <input type="text" id="accountName" placeholder="Your full name as registered on mobile money" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-phone-alt"></i> Phone Number</label>
+                        <input type="tel" id="phoneNumber" placeholder="07xxxxxxxx" required>
+                        <small>Phone number where money will be sent</small>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-withdraw">
+                        <i class="fas fa-arrow-up"></i> Request Withdrawal
+                    </button>
+                </form>
+                
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <strong>Withdrawal Information:</strong><br>
+                        • Withdrawals are processed within 24 hours<br>
+                        • Money will be sent to your mobile money account<br>
+                        • Minimum withdrawal: TZS 1,000<br>
+                        • Maximum withdrawal: TZS 1,000,000<br>
+                        • Target number: <strong>0767332532</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Recent Withdrawals -->
+        <div class="card">
+            <h2><i class="fas fa-clock"></i> Recent Withdrawal Requests</h2>
+            <div class="table-wrapper">
+                <table class="withdrawal-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Amount</th>
+                            <th>Network</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="withdrawalsTableBody">
+                        <tr><td colspan="6" class="empty-state">No withdrawal requests yet</td><tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="info-box" style="margin-top: 20px; background: #fef3c7;">
+                <i class="fas fa-truck"></i>
+                <div>
+                    <strong>Processing Time:</strong> Withdrawal requests are processed within 24 hours. You will receive money on your mobile money account.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div id="confirmModal" class="modal">
+    <div class="modal-content">
+        <i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i>
+        <h3>Confirm Withdrawal</h3>
+        <p id="confirmMessage">Are you sure you want to withdraw this amount?</p>
+        <div class="modal-buttons">
+            <button class="confirm-no" onclick="closeModal()">Cancel</button>
+            <button class="confirm-yes" id="confirmWithdrawBtn">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ========== STORAGE KEYS ==========
+    const STORAGE_KEYS = {
+        USERS: 'deposit_users',
+        TRANSACTIONS: 'depositTransactions',
+        WITHDRAWALS: 'withdrawal_requests',
+        CURRENT_USER: 'current_logged_in_user'
+    };
+    
+    // ========== CONSTANTS ==========
+    const MIN_WITHDRAWAL = 1000;
+    const MAX_WITHDRAWAL = 1000000;
+    const TARGET_PHONE = "0767332532";
+    
+    // ========== GLOBAL VARIABLES ==========
+    let currentUser = null;
+    let pendingWithdrawal = null;
+    
+    // ========== INITIALIZATION ==========
+    function init() {
+        // Check if user is logged in
+        const storedUser = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
+        if (!storedUser) {
+            window.location.href = 'login.html';
+            return;
+        }
+        
+        currentUser = JSON.parse(storedUser);
+        
+        // Initialize withdrawals storage if not exists
+        if (!localStorage.getItem(STORAGE_KEYS.WITHDRAWALS)) {
+            localStorage.setItem(STORAGE_KEYS.WITHDRAWALS, JSON.stringify([]));
+        }
+        
+        // Load user data
+        loadUserData();
+        
+        // Load withdrawals
+        loadWithdrawals();
+    }
+    
+    // ========== LOAD USER DATA ==========
+    function loadUserData() {
+        document.getElementById('userName').textContent = currentUser.fullname;
+        
+        // Get user balance (from localStorage or default)
+        let balance = currentUser.balance || 25000; // Default demo balance
+        
+        // Update balance display
+        document.getElementById('balanceAmount').textContent = `TZS ${formatNumber(balance)}`;
+        document.getElementById('balanceDisplay').innerHTML = `<i class="fas fa-wallet"></i> TZS ${formatNumber(balance)}`;
+        
+        // Pre-fill phone number if available
+        if (currentUser.phone) {
+            document.getElementById('phoneNumber').value = currentUser.phone;
+        }
+        
+        // Pre-fill name if available
+        if (currentUser.fullname) {
+            document.getElementById('accountName').value = currentUser.fullname;
+        }
+    }
+    
+    // ========== FORMAT NUMBER ==========
+    function formatNumber(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    
+    // ========== SHOW ALERT ==========
+    function showAlert(message, type) {
+        const alertDiv = document.getElementById('alertMessage');
+        alertDiv.className = `alert alert-${type}`;
+        alertDiv.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle')}"></i> ${message}`;
+        
+        setTimeout(() => {
+            alertDiv.className = 'alert';
+        }, 5000);
+    }
+    
+    // ========== LOAD WITHDRAWALS ==========
+    function loadWithdrawals() {
+        const allWithdrawals = JSON.parse(localStorage.getItem(STORAGE_KEYS.WITHDRAWALS) || '[]');
+        
+        // Filter withdrawals for current user only
+        const userWithdrawals = allWithdrawals.filter(w => w.userId === currentUser.id);
+        
+        // Sort by date (newest first)
+        userWithdrawals.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        const tbody = document.getElementById('withdrawalsTableBody');
+        
+        if (userWithdrawals.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No withdrawal requests yet</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = userWithdrawals.map(w => {
+            let statusClass = '';
+            let statusText = '';
+            
+            switch(w.status) {
+                case 'pending':
+                    statusClass = 'status-pending';
+                    statusText = '⏳ Pending';
+                    break;
+                case 'processing':
+                    statusClass = 'status-processing';
+                    statusText = '⚙️ Processing';
+                    break;
+                case 'completed':
+                    statusClass = 'status-completed';
+                    statusText = '✅ Completed';
+                    break;
+                case 'rejected':
+                    statusClass = 'status-rejected';
+                    statusText = '❌ Rejected';
+                    break;
+                default:
+                    statusClass = 'status-pending';
+                    statusText = '⏳ Pending';
+            }
+            
+            return `
+                <tr>
+                    <td style="font-family: monospace; font-size: 12px;">${w.withdrawalId}</td>
+                    <td><strong>TZS ${formatNumber(w.amount)}</strong></td>
+                    <td>${w.network}</td>
+                    <td><span class="status ${statusClass}">${statusText}</span></td>
+                    <td style="font-size: 12px;">${w.date}</td>
+                    <td>
+                        ${w.status === 'pending' ? 
+                            `<button onclick="cancelWithdrawal('${w.withdrawalId}')" style="background: none; border: none; color: #ef4444; cursor: pointer;">
+                                <i class="fas fa-times-circle"></i> Cancel
+                            </button>` : 
+                            '-'
+                        }
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+    
+    // ========== UPDATE USER BALANCE ==========
+    function updateUserBalance(newBalance) {
+        // Update currentUser object
+        currentUser.balance = newBalance;
+        
+        // Update localStorage
+        localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(currentUser));
+        
+        // Update display
+        document.getElementById('balanceAmount').textContent = `TZS ${formatNumber(newBalance)}`;
+        document.getElementById('balanceDisplay').innerHTML = `<i class="fas fa-wallet"></i> TZS ${formatNumber(newBalance)}`;
+        
+        // Also update in users array (for consistency)
+        const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || '[]');
+        const userIndex = users.findIndex(u => u.id === currentUser.id);
+        if (userIndex !== -1) {
+            users[userIndex].balance = newBalance;
+            localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+        }
+    }
+    
+    // ========== CREATE WITHDRAWAL REQUEST ==========
+    function createWithdrawalRequest(amount, network, accountName, phone) {
+        const allWithdrawals = JSON.parse(localStorage.getItem(STORAGE_KEYS.WITHDRAWALS) || '[]');
+        
+        const withdrawalId = 'WDR' + Date.now() + Math.floor(Math.random() * 1000);
+        const now = new Date();
+        const dateStr = now.toLocaleString('en-TZ', {
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        const newWithdrawal = {
+            withdrawalId: withdrawalId,
+            userId: currentUser.id,
+            userEmail: currentUser.email,
+            fullname: currentUser.fullname,
+            phone: phone,
+            amount: amount,
+            network: network,
+            accountName: accountName,
+            status: 'pending',
+            date: dateStr,
+            timestamp: now.getTime()
+        };
+        
+        allWithdrawals.push(newWithdrawal);
+        localStorage.setItem(STORAGE_KEYS.WITHDRAWALS, JSON.stringify(allWithdrawals));
+        
+        // Deduct amount from balance (hold until processed)
+        const newBalance = (currentUser.balance || 25000) - amount;
+        updateUserBalance(newBalance);
+        
+        return newWithdrawal;
+    }
+    
+    // ========== CANCEL WITHDRAWAL ==========
+    function cancelWithdrawal(withdrawalId) {
+        if (!confirm('Are you sure you want to cancel this withdrawal request?')) return;
+        
+        const allWithdrawals = JSON.parse(localStorage.getItem(STORAGE_KEYS.WITHDRAWALS) || '[]');
+        const withdrawalIndex = allWithdrawals.findIndex(w => w.withdrawalId === withdrawalId);
+        
+        if (withdrawalIndex !== -1 && allWithdrawals[withdrawalIndex].status === 'pending') {
+            // Refund amount back to balance
+            const refundAmount = allWithdrawals[withdrawalIndex].amount;
+            const newBalance = (currentUser.balance || 25000) + refundAmount;
+            updateUserBalance(newBalance);
+            
+            // Remove withdrawal request
+            allWithdrawals.splice(withdrawalIndex, 1);
+            localStorage.setItem(STORAGE_KEYS.WITHDRAWALS, JSON.stringify(allWithdrawals));
+            
+            showAlert(`Withdrawal cancelled. TZS ${formatNumber(refundAmount)} has been refunded to your balance.`, 'success');
+            loadWithdrawals();
+        }
+    }
+    
+    // ========== SUBMIT WITHDRAWAL ==========
+    function submitWithdrawal() {
+        if (!pendingWithdrawal) return;
+        
+        const { amount, network, accountName, phone } = pendingWithdrawal;
+        
+        // Create withdrawal request
+        const newWithdrawal = createWithdrawalRequest(amount, network, accountName, phone);
+        
+        // Show success message
+        showAlert(
+            `✅ Withdrawal request of TZS ${formatNumber(amount)} submitted successfully! You will receive the money on your ${network} account (${phone}) within 24 hours. Reference: ${newWithdrawal.withdrawalId}`,
+            'success'
+        );
+        
+        // Reset form
+        document.getElementById('withdrawForm').reset();
+        document.getElementById('amount').value = '';
+        document.getElementById('network').value = '';
+        document.getElementById('accountName').value = currentUser.fullname;
+        document.getElementById('phoneNumber').value = currentUser.phone || '';
+        
+        // Reload withdrawals list
+        loadWithdrawals();
+        
+        // Close modal
+        closeModal();
+        pendingWithdrawal = null;
+    }
+    
+    // ========== FORM SUBMISSION HANDLER ==========
+    document.getElementById('withdrawForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const amount = parseFloat(document.getElementById('amount').value);
+        const network = document.getElementById('network').value;
+        const accountName = document.getElementById('accountName').value.trim();
+        const phone = document.getElementById('phoneNumber').value.trim();
+        
+        // Get current balance
+        const currentBalance = currentUser.balance || 25000;
+        
+        // Validations
+        if (!amount || amount < MIN_WITHDRAWAL) {
+            showAlert(`Minimum withdrawal amount is TZS ${formatNumber(MIN_WITHDRAWAL)}`, 'error');
+            return;
+        }
+        
+        if (amount > MAX_WITHDRAWAL) {
+            showAlert(`Maximum withdrawal amount is TZS ${formatNumber(MAX_WITHDRAWAL)}`, 'error');
+            return;
+        }
+        
+        if (amount > currentBalance) {
+            showAlert(`Insufficient balance. Your balance is TZS ${formatNumber(currentBalance)}`, 'error');
+            return;
+        }
+        
+        if (!network) {
+            showAlert('Please select your mobile network', 'error');
+            return;
+        }
+        
+        if (!accountName) {
+            showAlert('Please enter your account name', 'error');
+            return;
+        }
+        
+        if (!phone) {
+            showAlert('Please enter your phone number', 'error');
+            return;
+        }
+        
+        // Validate phone number (Tanzanian format)
+        const phoneRegex = /^07[0-9]{8}$/;
+        if (!phoneRegex.test(phone)) {
+            showAlert('Please enter a valid Tanzanian phone number (07xxxxxxxx)', 'error');
+            return;
+        }
+        
+        // Store pending withdrawal and show confirmation modal
+        pendingWithdrawal = { amount, network, accountName, phone };
+        
+        document.getElementById('confirmMessage').innerHTML = `
+            You are requesting to withdraw <strong>TZS ${formatNumber(amount)}</strong><br>
+            to your <strong>${network}</strong> account (${phone}).<br><br>
+            This amount will be deducted from your balance immediately. 
+            The money will be sent within 24 hours.
+        `;
+        
+        document.getElementById('confirmModal').classList.add('show');
+    });
+    
+    // ========== CONFIRM WITHDRAWAL BUTTON ==========
+    document.getElementById('confirmWithdrawBtn').addEventListener('click', submitWithdrawal);
+    
+    // ========== MODAL FUNCTIONS ==========
+    function closeModal() {
+        document.getElementById('confirmModal').classList.remove('show');
+        pendingWithdrawal = null;
+    }
+    
+    // ========== LOGOUT FUNCTION ==========
+    function logout() {
+        localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+        window.location.href = 'login.html';
+    }
+    
+    // ========== ADD PHONE NUMBER VALIDATION ==========
+    document.getElementById('phoneNumber').addEventListener('input', function() {
+        let cleaned = this.value.replace(/\D/g, '');
+        if (cleaned.length > 10) cleaned = cleaned.slice(0, 10);
+        this.value = cleaned;
+    });
+    
+    // ========== AMOUNT VALIDATION ==========
+    document.getElementById('amount').addEventListener('input', function() {
+        let value = parseFloat(this.value);
+        if (value < MIN_WITHDRAWAL && value > 0) {
+            this.setCustomValidity(`Minimum amount is TZS ${formatNumber(MIN_WITHDRAWAL)}`);
+        } else if (value > MAX_WITHDRAWAL) {
+            this.setCustomValidity(`Maximum amount is TZS ${formatNumber(MAX_WITHDRAWAL)}`);
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+    
+    // ========== CLOSE MODAL ON OUTSIDE CLICK ==========
+    document.getElementById('confirmModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeModal();
+        }
+    });
+    
+    // ========== CREATE DEMO USER IF NOT EXISTS ==========
+    function createDemoUser() {
+        const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || '[]');
+        if (users.length === 0) {
+            const demoUser = {
+                id: 'user_demo_001',
+                fullname: 'Demo User',
+                email: 'demo@deposithub.com',
+                phone: '0767000000',
+                password: 'demo123',
+                balance: 25000,
+                role: 'user',
+                createdAt: new Date().toISOString()
+            };
+            users.push(demoUser);
+            localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+            
+            // Sample withdrawals
+            const sampleWithdrawals = [
+                {
+                    withdrawalId: 'WDR1703500000001',
+                    userId: 'user_demo_001',
+                    userEmail: 'demo@deposithub.com',
+                    fullname: 'Demo User',
+                    phone: '0767000000',
+                    amount: 5000,
+                    network: 'M-Pesa',
+                    accountName: 'Demo User',
+                    status: 'completed',
+                    date: 'Dec 20, 2025, 14:30',
+                    timestamp: Date.now() - 5 * 24 * 60 * 60 * 1000
+                },
+                {
+                    withdrawalId: 'WDR1703500000002',
+                    userId: 'user_demo_001',
+                    userEmail: 'demo@deposithub.com',
+                    fullname: 'Demo User',
+                    phone: '0767000000',
+                    amount: 3000,
+                    network: 'Airtel Money',
+                    accountName: 'Demo User',
+                    status: 'pending',
+                    date: 'Dec 24, 2025, 10:15',
+                    timestamp: Date.now() - 1 * 24 * 60 * 60 * 1000
+                }
+            ];
+            localStorage.setItem(STORAGE_KEYS.WITHDRAWALS, JSON.stringify(sampleWithdrawals));
+        }
+    }
+    
+    // ========== AUTO LOGIN DEMO USER IF NEEDED ==========
+    function autoLoginDemoUser() {
+        const currentUserStored = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
+        if (!currentUserStored) {
+            const demoUser = {
+                id: 'user_demo_001',
+                fullname: 'Demo User',
+                email: 'demo@deposithub.com',
+                phone: '0767000000',
+                balance: 25000,
+                role: 'user'
+            };
+            localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(demoUser));
+        }
+    }
+    
+    // ========== START APPLICATION ==========
+    createDemoUser();
+    autoLoginDemoUser();
+    init();
+    
+    // Make functions global for onclick handlers
+    window.cancelWithdrawal = cancelWithdrawal;
+    window.logout = logout;
+    window.closeModal = closeModal;
+</script>
+
+</body>
+</html>
