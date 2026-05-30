@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Transaction History | Deposit Records</title>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========== RESET & BASE STYLES ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* ========== MAIN CONTAINER ========== */
+        .history-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        /* ========== HEADER SECTION ========== */
+        .history-header {
+            background: linear-gradient(135deg, #0a2e25 0%, #1a5a4a 100%);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-title h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-title h1 i {
+            background: #ff9800;
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 20px;
+        }
+
+        .header-title p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 12px 24px;
+            border-radius: 16px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255,255,255,0.25);
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* ========== FILTER SECTION ========== */
+        .filter-section {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f1f5f9;
+            padding: 8px 16px;
+            border-radius: 40px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-box i {
+            color: #64748b;
+        }
+
+        .search-box input {
+            border: none;
+            background: transparent;
+            padding: 10px;
+            font-size: 14px;
+            width: 100%;
+            outline: none;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .filter-btn:hover {
+            border-color: #1a5a4a;
+            background: #f0fdf4;
+        }
+
+        .filter-btn.active {
+            background: #1a5a4a;
+            color: white;
+            border-color: #1a5a4a;
+        }
+
+        .export-btn {
+            background: #ff9800;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .export-btn:hover {
+            background: #e68900;
+            transform: translateY(-2px);
+        }
+
+        /* ========== TRANSACTION TABLE ========== */
+        .table-wrapper {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .transaction-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .transaction-table th {
+            background: #1a4a3a;
+            color: white;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .transaction-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        .transaction-table tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Amount styling */
+        .amount-success {
+            color: #15803d;
+            font-weight: 700;
+        }
+
+        .amount-pending {
+            color: #b45309;
+        }
+
+        /* Network icons */
+        .network-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ========== EMPTY STATE ========== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            color: #cbd5e1;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: #94a3b8;
+        }
+
+        /* ========== PAGINATION ========== */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            padding: 25px;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .pagination button {
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            border-color: #1a5a4a;
+            background: #1a5a4a;
+            color: white;
+        }
+
+        .pagination button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .page-info {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        /* ========== MODAL FOR DETAILS ========== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.show {
+            display: flex;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 500px;
+            width: 90%;
+            padding: 30px;
+            position: relative;
+            animation: slideUp 0.3s;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .modal-header h3 {
+            color: #1a5a4a;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #94a3b8;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .detail-value {
+            color: #1e293b;
+        }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+            
+            .transaction-table th,
+            .transaction-table td {
+                padding: 10px;
+                font-size: 12px;
+            }
+            
+            .header-title h1 {
+                font-size: 22px;
+            }
+            
+            .stat-number {
+                font-size: 20px;
+            }
+            
+            .filter-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            /* Hide some columns on mobile */
+            .hide-mobile {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .transaction-table th:nth-child(3),
+            .transaction-table td:nth-child(3) {
+                display: none;
+            }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1a5a4a;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="history-container">
+    <!-- Header Section -->
+    <div class="history-header">
+        <div class="header-title">
+            <h1>
+                <i class="fas fa-history"></i>
+                Transaction History
+            </h1>
+            <p>View all your deposit transactions in one place</p>
+        </div>
+        <div class="header-stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalTransactions">0</div>
+                <div class="stat-label">Total Transactions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalAmount">0</div>
+                <div class="stat-label">Total Deposited (TZS)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="successCount">0</div>
+                <div class="stat-label">Successful</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="filter-section">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search by Transaction ID, Name, or Phone...">
+        </div>
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="success">✅ Success</button>
+            <button class="filter-btn" data-filter="pending">⏳ Pending</button>
+            <button class="filter-btn" data-filter="failed">❌ Failed</button>
+        </div>
+        <button class="export-btn" id="exportBtn">
+            <i class="fas fa-download"></i> Export CSV
+        </button>
+    </div>
+
+    <!-- Transaction Table -->
+    <div class="table-wrapper">
+        <table class="transaction-table" id="transactionTable">
+            <thead>
+                <tr>
+                    <th>Transaction ID</th>
+                    <th>Full Name</th>
+                    <th>Phone Number</th>
+                    <th class="hide-mobile">Network</th>
+                    <th>Amount (TZS)</th>
+                    <th>Date & Time</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr>
+                    <td colspan="8">
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <h3>No Transactions Found</h3>
+                            <p>Make your first deposit to see transaction history here.</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Pagination -->
+        <div class="pagination" id="pagination">
+            <button id="prevBtn" disabled><i class="fas fa-chevron-left"></i> Previous</button>
+            <span class="page-info" id="pageInfo">Page 1 of 1</span>
+            <button id="nextBtn" disabled>Next <i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Transaction Details -->
+<div class="modal" id="detailsModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-receipt"></i> Transaction Details</h3>
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+        </div>
+        <div id="modalDetails">
+            <!-- Dynamic content will be inserted here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // ========== JAVASCRIPT CODE ==========
+    
+    // Global variables
+    let allTransactions = [];
+    let currentFilter = 'all';
+    let currentSearch = '';
+    let currentPage = 1;
+    const itemsPerPage = 10;
+    
+    // Target phone number (for display)
+    const TARGET_PHONE = "0767332532";
+    
+    // ========== LOAD TRANSACTIONS FROM localStorage ==========
+    function loadTransactionsFromStorage() {
+        const stored = localStorage.getItem('depositTransactions');
+        if (stored) {
+            allTransactions = JSON.parse(stored);
+        } else {
+            // Demo transactions for testing
+            allTransactions = getDemoTransactions();
+            localStorage.setItem('depositTransactions', JSON.stringify(allTransactions));
+        }
+        updateStats();
+        renderTable();
+    }
+    
+    // Demo transactions for first-time users
+    function getDemoTransactions() {
+        const demoData = [];
+        const now = new Date();
+        
+        for (let i = 0; i < 15; i++) {
+            const date = new Date(now);
+            date.setDate(now.getDate() - i);
+            
+            const statuses = ['success', 'success', 'success', 'pending', 'success'];
+            const status = statuses[Math.floor(Math.random() * statuses.length)];
+            const amounts = [1000, 2500, 5000, 10000, 20000, 50000];
+            const networks = ['M-Pesa', 'Airtel Money', 'Tigo Pesa', 'HaloPesa'];
+            const names = ['John Mwema', 'Sarah John', 'Michael Peter', 'Grace William', 'James Mtoka', 'Anna Charles'];
+            
+            demoData.push({
+                transaction_id: `TXN${date.getFullYear()}${(date.getMonth()+1).toString().padStart(2,'0')}${date.getDate().toString().padStart(2,'0')}${date.getHours().toString().padStart(2,'0')}${date.getMinutes().toString().padStart(2,'0')}${i.toString().padStart(4,'0')}`,
+                fullname: names[i % names.length],
+                phone: `0767${Math.floor(100000 + Math.random() * 900000)}`,
+                amount: amounts[i % amounts.length],
+                network: networks[i % networks.length],
+                date: date.toLocaleString('en-TZ', { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+                status: status,
+                target_phone: TARGET_PHONE
+            });
+        }
+        return demoData;
+    }
+    
+    // ========== UPDATE STATISTICS ==========
+    function updateStats() {
+        const total = allTransactions.length;
+        const totalAmount = allTransactions.reduce((sum, t) => sum + (t.status === 'success' ? t.amount : 0), 0);
+        const successCount = allTransactions.filter(t => t.status === 'success').length;
+        
+        document.getElementById('totalTransactions').textContent = total;
+        document.getElementById('totalAmount').textContent = totalAmount.toLocaleString();
+        document.getElementById('successCount').textContent = successCount;
+    }
+    
+    // ========== FILTER AND SEARCH TRANSACTIONS ==========
+    function getFilteredTransactions() {
+        let filtered = [...allTransactions];
+        
+        // Apply status filter
+        if (currentFilter !== 'all') {
+            filtered = filtered.filter(t => t.status === currentFilter);
+        }
+        
+        // Apply search
+        if (currentSearch.trim() !== '') {
+            const searchLower = currentSearch.toLowerCase();
+            filtered = filtered.filter(t => 
+                t.transaction_id.toLowerCase().includes(searchLower) ||
+                t.fullname.toLowerCase().includes(searchLower) ||
+                t.phone.includes(searchLower)
+            );
+        }
+        
+        // Sort by date (newest first)
+        filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        return filtered;
+    }
+    
+    // ========== RENDER TABLE WITH PAGINATION ==========
+    function renderTable() {
+        const filtered = getFilteredTransactions();
+        const totalPages = Math.ceil(filtered.length / itemsPerPage);
+        
+        // Adjust current page if out of bounds
+        if (currentPage > totalPages && totalPages > 0) {
+            currentPage = totalPages;
+        }
+        if (currentPage < 1) {
+            currentPage = 1;
+        }
+        
+        // Get current page items
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageItems = filtered.slice(startIndex, endIndex);
+        
+        // Update pagination UI
+        document.getElementById('prevBtn').disabled = currentPage === 1;
+        document.getElementById('nextBtn').disabled = currentPage === totalPages || totalPages === 0;
+        document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages || 1}`;
+        
+        // Render table body
+        const tbody = document.getElementById('tableBody');
+        
+        if (pageItems.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="8">
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <h3>No Transactions Found</h3>
+                            <p>Try changing your filter or search criteria.</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+        
+        tbody.innerHTML = pageItems.map(transaction => {
+            // Status badge class
+            let statusClass = '';
+            let statusText = '';
+            if (transaction.status === 'success') {
+                statusClass = 'status-success';
+                statusText = '✅ Success';
+            } else if (transaction.status === 'pending') {
+                statusClass = 'status-pending';
+                statusText = '⏳ Pending';
+            } else {
+                statusClass = 'status-failed';
+                statusText = '❌ Failed';
+            }
+            
+            // Amount class
+            const amountClass = transaction.status === 'success' ? 'amount-success' : 'amount-pending';
+            
+            // Network icon
+            let networkIcon = '';
+            if (transaction.network === 'M-Pesa') networkIcon = '📱';
+            else if (transaction.network === 'Airtel Money') networkIcon = '📶';
+            else if (transaction.network === 'Tigo Pesa') networkIcon = '📞';
+            else networkIcon = '📲';
+            
+            return `
+                <tr>
+                    <td style="font-family: monospace; font-size: 12px;">${transaction.transaction_id}</td>
+                    <td><strong>${escapeHtml(transaction.fullname)}</strong></td>
+                    <td>${transaction.phone}</td>
+                    <td class="hide-mobile"><span class="network-badge">${networkIcon} ${transaction.network}</span></td>
+                    <td class="${amountClass}">TZS ${parseInt(transaction.amount).toLocaleString()}</td>
+                    <td style="font-size: 12px;">${transaction.date}</td>
+                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    <td>
+                        <button onclick="viewDetails('${transaction.transaction_id}')" style="background: none; border: none; color: #1a5a4a; cursor: pointer;">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+    
+    // Helper function to escape HTML
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
+    // ========== VIEW TRANSACTION DETAILS ==========
+    function viewDetails(transactionId) {
+        const transaction = allTransactions.find(t => t.transaction_id === transactionId);
+        if (!transaction) return;
+        
+        const modal = document.getElementById('detailsModal');
+        const modalDetails = document.getElementById('modalDetails');
+        
+        const statusClass = transaction.status === 'success' ? '✅ Successful' : (transaction.status === 'pending' ? '⏳ Pending' : '❌ Failed');
+        
+        modalDetails.innerHTML = `
+            <div class="detail-row">
+                <span class="detail-label"><i class="fas fa-hashtag"></i> Transaction ID:</span>
+                <span class="detail-value" style="font-family: monospace;">${transaction.transaction_id}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label"><i class="fas fa-user"></i> Full Name:</span>
+                <span class="detail-value">${escapeHtml(transaction.fullname)}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label"><i class="fas fa-phone-alt"></i> Sender Phone:</span>
+                <span class="detail-value">${transaction.phone}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label"><i class="fas fa-globe"></i> Network:</span>
+                <span class="detail-value">${transaction.network}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label"><i class="fas fa-coins"></i> Amount:</span>
+                <span class="detail-value amount-success">TZS ${parseInt(transaction.amount).toLocaleString()}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label"><i class="fas fa-mobile-alt"></i> Target Phone:</span>
+                <span class="detail-value"><strong>${transaction.target_phone || TARGET_PHONE}</strong></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label"><i class="fas fa-calendar"></i> Date & Time:</span>
+                <span class="detail-value">${transaction.date}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label"><i class="fas fa-info-circle"></i> Status:</span>
+                <span class="detail-value">${statusClass}</span>
+            </div>
+        `;
+        
+        modal.classList.add('show');
+    }
+    
+    function closeModal() {
+        document.getElementById('detailsModal').classList.remove('show');
+    }
+    
+    // Close modal when clicking outside
+    document.getElementById('detailsModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeModal();
+        }
+    });
+    
+    // ========== EXPORT TO CSV ==========
+    function exportToCSV() {
+        const filtered = getFilteredTransactions();
+        if (filtered.length === 0) {
+            alert('No transactions to export!');
+            return;
+        }
+        
+        // CSV headers
+        const headers = ['Transaction ID', 'Full Name', 'Phone Number', 'Network', 'Amount (TZS)', 'Date', 'Status', 'Target Phone'];
+        
+        // Prepare data rows
+        const rows = filtered.map(t => [
+            t.transaction_id,
+            t.fullname,
+            t.phone,
+            t.network,
+            t.amount,
+            t.date,
+            t.status,
+            t.target_phone || TARGET_PHONE
+        ]);
+        
+        // Combine headers and rows
+        const csvContent = [headers, ...rows]
+            .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+            .join('\n');
+        
+        // Download file
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.setAttribute('download', `transactions_${new Date().toISOString().slice(0,19)}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+    
+    // ========== EVENT LISTENERS ==========
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        currentSearch = e.target.value;
+        currentPage = 1;
+        renderTable();
+    });
+    
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Update active class
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            currentFilter = this.dataset.filter;
+            currentPage = 1;
+            renderTable();
+        });
+    });
+    
+    document.getElementById('prevBtn').addEventListener('click', function() {
+        if (currentPage > 1) {
+            currentPage--;
+            renderTable();
+        }
+    });
+    
+    document.getElementById('nextBtn').addEventListener('click', function() {
+        const filtered = getFilteredTransactions();
+        const totalPages = Math.ceil(filtered.length / itemsPerPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderTable();
+        }
+    });
+    
+    document.getElementById('exportBtn').addEventListener('click', exportToCSV);
+    
+    // ========== SYNC WITH STORAGE (listen for updates) ==========
+    // This function can be called from deposit page to update history
+    window.updateTransactionHistory = function() {
+        loadTransactionsFromStorage();
+    };
+    
+    // Listen for storage changes (if multiple tabs open)
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'depositTransactions') {
+            loadTransactionsFromStorage();
+        }
+    });
+    
+    // ========== INITIALIZE ==========
+    loadTransactionsFromStorage();
+    
+    // Make functions available globally
+    window.viewDetails = viewDetails;
+    window.closeModal = closeModal;
+    
+</script>
+
+</body>
+</html>

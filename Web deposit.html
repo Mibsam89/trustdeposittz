@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Deposit Money | Send to 0767332532</title>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* ========== RESET & BASE STYLES ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6df 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* ========== MAIN CONTAINER ========== */
+        .deposit-container {
+            max-width: 550px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        /* ========== HEADER ========== */
+        .deposit-header {
+            background: linear-gradient(135deg, #0a2e25 0%, #1a5a4a 100%);
+            color: white;
+            padding: 30px 25px;
+            text-align: center;
+        }
+
+        .deposit-header i {
+            font-size: 48px;
+            background: #ff9800;
+            padding: 15px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+        }
+
+        .deposit-header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .deposit-header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        /* ========== TARGET PHONE NOTIFICATION ========== */
+        .target-phone-alert {
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 12px 20px;
+            margin: 20px 25px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .target-phone-alert i {
+            font-size: 24px;
+            color: #ff9800;
+        }
+
+        .target-phone-alert span {
+            font-weight: bold;
+            color: #1a4a3a;
+            font-size: 18px;
+        }
+
+        .target-phone-alert small {
+            color: #856404;
+        }
+
+        /* ========== DEPOSIT FORM ========== */
+        .deposit-form {
+            padding: 0 25px 25px 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group label i {
+            color: #1a5a4a;
+            width: 20px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #ff9800;
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+        }
+
+        /* Amount input with currency symbol */
+        .amount-wrapper {
+            position: relative;
+        }
+
+        .amount-symbol {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: bold;
+            color: #1a5a4a;
+        }
+
+        .amount-wrapper input {
+            padding-left: 45px;
+        }
+
+        /* Submit Button */
+        .deposit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .deposit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 152, 0, 0.3);
+        }
+
+        .deposit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* ========== STATUS MESSAGE SECTION ========== */
+        .status-section {
+            padding: 0 25px 20px 25px;
+        }
+
+        .status-card {
+            background: #f1f5f9;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .status-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .status-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .status-message {
+            font-size: 14px;
+            color: #475569;
+        }
+
+        /* Status variants */
+        .status-pending {
+            background: #fef9e3;
+            border-left: 4px solid #f59e0b;
+        }
+        .status-pending .status-title { color: #b45309; }
+        
+        .status-success {
+            background: #e6f7e6;
+            border-left: 4px solid #22c55e;
+        }
+        .status-success .status-title { color: #15803d; }
+        
+        .status-error {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+        }
+        .status-error .status-title { color: #b91c1c; }
+
+        /* ========== NETWORK ICONS SECTION ========== */
+        .networks-section {
+            padding: 0 25px 25px 25px;
+        }
+
+        .networks-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .network-icons {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .network-badge {
+            background: #f1f5f9;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .network-badge i {
+            font-size: 16px;
+        }
+
+        /* ========== INFO BOX ========== */
+        .info-box {
+            background: #e8f0fe;
+            margin: 0 25px 25px 25px;
+            padding: 15px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            color: #1e40af;
+        }
+
+        .info-box i {
+            font-size: 20px;
+        }
+
+        /* ========== FOOTER ========== */
+        .deposit-footer {
+            background: #f8fafc;
+            padding: 20px 25px;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .pulse {
+            animation: pulse 1s ease-in-out;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 550px) {
+            body {
+                padding: 10px;
+            }
+            .deposit-header h1 {
+                font-size: 22px;
+            }
+            .target-phone-alert {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="deposit-container">
+    <!-- Header -->
+    <div class="deposit-header">
+        <i class="fas fa-money-bill-wave"></i>
+        <h1>Deposit Money</h1>
+        <p>Fast & secure mobile money deposit</p>
+    </div>
+
+    <!-- Target Phone Display -->
+    <div class="target-phone-alert">
+        <i class="fas fa-mobile-alt"></i>
+        <div>
+            <strong>📞 Sending money to:</strong> 
+            <span>0767 332 532</span>
+            <small>(Official deposit number)</small>
+        </div>
+    </div>
+
+    <!-- Deposit Form -->
+    <div class="deposit-form">
+        <form id="depositForm">
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Full Name</label>
+                <input type="text" id="fullname" placeholder="Enter your full name" required>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-phone-alt"></i> Your Phone Number</label>
+                <input type="tel" id="userPhone" placeholder="e.g., 0767123456" required>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-globe"></i> Mobile Network</label>
+                <select id="network" required>
+                    <option value="">-- Select your network --</option>
+                    <option value="M-Pesa">📱 M-Pesa (Vodacom)</option>
+                    <option value="Airtel Money">📱 Airtel Money</option>
+                    <option value="Tigo Pesa">📱 Tigo Pesa</option>
+                    <option value="HaloPesa">📱 HaloPesa</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-coins"></i> Amount (TZS)</label>
+                <div class="amount-wrapper">
+                    <span class="amount-symbol">TSh</span>
+                    <input type="number" id="amount" placeholder="Enter amount" required min="100">
+                </div>
+            </div>
+
+            <button type="submit" class="deposit-btn" id="depositBtn">
+                <i class="fas fa-download"></i> Deposit Now
+            </button>
+        </form>
+    </div>
+
+    <!-- Status Section (Deposit received, Waiting for payment, Transaction successful) -->
+    <div class="status-section" id="statusSection">
+        <div class="status-card" id="statusCard">
+            <div class="status-icon" id="statusIcon">💰</div>
+            <div class="status-title" id="statusTitle">Ready to Deposit</div>
+            <div class="status-message" id="statusMessage">Fill the form and click Deposit Now</div>
+        </div>
+    </div>
+
+    <!-- Supported Networks -->
+    <div class="networks-section">
+        <div class="networks-title">✅ We Accept All Major Networks</div>
+        <div class="network-icons">
+            <div class="network-badge"><i class="fas fa-check-circle"></i> M-Pesa</div>
+            <div class="network-badge"><i class="fas fa-check-circle"></i> Airtel</div>
+            <div class="network-badge"><i class="fas fa-check-circle"></i> Tigo Pesa</div>
+            <div class="network-badge"><i class="fas fa-check-circle"></i> HaloPesa</div>
+        </div>
+    </div>
+
+    <!-- Info Box -->
+    <div class="info-box">
+        <i class="fas fa-shield-alt"></i>
+        <div>
+            <strong>Secure Transaction</strong><br>
+            Your deposit will be sent to 0767332532. You'll receive confirmation instantly.
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="deposit-footer">
+        <p><i class="fas fa-phone"></i> Support: 0767 332 532 | <i class="fas fa-envelope"></i> deposits@company.com</p>
+        <p style="margin-top: 8px;">© 2025 Deposit System | All rights reserved</p>
+    </div>
+</div>
+
+<script>
+    // ========== JAVASCRIPT CODE ==========
+    
+    // Target phone number (where money is sent)
+    const TARGET_PHONE = "0767332532";
+    
+    // DOM Elements
+    const form = document.getElementById('depositForm');
+    const depositBtn = document.getElementById('depositBtn');
+    const statusCard = document.getElementById('statusCard');
+    const statusIcon = document.getElementById('statusIcon');
+    const statusTitle = document.getElementById('statusTitle');
+    const statusMessage = document.getElementById('statusMessage');
+    
+    // Helper function to update status UI
+    function updateStatus(type, title, message, icon) {
+        // Remove existing classes
+        statusCard.classList.remove('status-pending', 'status-success', 'status-error');
+        
+        // Add new class based on type
+        if (type === 'pending') {
+            statusCard.classList.add('status-pending');
+        } else if (type === 'success') {
+            statusCard.classList.add('status-success');
+        } else if (type === 'error') {
+            statusCard.classList.add('status-error');
+        }
+        
+        // Update content
+        statusIcon.innerHTML = icon;
+        statusTitle.innerHTML = title;
+        statusMessage.innerHTML = message;
+        
+        // Add pulse animation
+        statusCard.classList.add('pulse');
+        setTimeout(() => {
+            statusCard.classList.remove('pulse');
+        }, 500);
+    }
+    
+    // Function to save transaction to localStorage (history)
+    function saveTransaction(transaction) {
+        let transactions = JSON.parse(localStorage.getItem('depositTransactions') || '[]');
+        transactions.unshift(transaction); // Add to beginning
+        // Keep only last 20 transactions
+        if (transactions.length > 20) transactions.pop();
+        localStorage.setItem('depositTransactions', JSON.stringify(transactions));
+    }
+    
+    // Function to generate unique transaction ID
+    function generateTransactionId() {
+        const date = new Date();
+        const timestamp = date.getFullYear().toString() +
+                         (date.getMonth() + 1).toString().padStart(2, '0') +
+                         date.getDate().toString().padStart(2, '0') +
+                         date.getHours().toString().padStart(2, '0') +
+                         date.getMinutes().toString().padStart(2, '0') +
+                         date.getSeconds().toString().padStart(2, '0');
+        const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+        return `TXN${timestamp}${random}`;
+    }
+    
+    // Function to format date
+    function getCurrentDateTime() {
+        const now = new Date();
+        return now.toLocaleString('en-TZ', {
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+    }
+    
+    // Function to simulate sending money to target phone
+    async function processDeposit(depositData) {
+        return new Promise((resolve) => {
+            // Simulate network delay (payment processing)
+            setTimeout(() => {
+                // In real scenario, this would connect to M-Pesa/API
+                // For demo, we always succeed
+                resolve({
+                    success: true,
+                    message: `Deposit of TZS ${parseInt(depositData.amount).toLocaleString()} has been successfully received on ${TARGET_PHONE}`,
+                    transactionId: depositData.transactionId
+                });
+            }, 2000);
+        });
+    }
+    
+    // Handle form submission
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Get form values
+        const fullname = document.getElementById('fullname').value.trim();
+        const userPhone = document.getElementById('userPhone').value.trim();
+        const network = document.getElementById('network').value;
+        const amount = document.getElementById('amount').value;
+        
+        // Validation
+        if (!fullname) {
+            updateStatus('error', 'Validation Error', 'Please enter your full name', '❌');
+            return;
+        }
+        
+        if (!userPhone) {
+            updateStatus('error', 'Validation Error', 'Please enter your phone number', '❌');
+            return;
+        }
+        
+        // Validate phone number format (basic Tanzanian format)
+        const phoneRegex = /^07[0-9]{8}$/;
+        if (!phoneRegex.test(userPhone)) {
+            updateStatus('error', 'Invalid Phone Number', 'Please enter a valid Tanzanian phone number (07xxxxxxxx)', '❌');
+            return;
+        }
+        
+        if (!network) {
+            updateStatus('error', 'Validation Error', 'Please select your mobile network', '❌');
+            return;
+        }
+        
+        if (!amount || amount < 100) {
+            updateStatus('error', 'Invalid Amount', 'Minimum deposit amount is TZS 100', '❌');
+            return;
+        }
+        
+        // Step 1: Deposit received - Waiting for payment
+        updateStatus(
+            'pending',
+            '📥 Deposit Received',
+            `Processing your deposit of TZS ${parseInt(amount).toLocaleString()} via ${network}. Complete payment on your phone.`,
+            '⏳'
+        );
+        
+        // Disable button while processing
+        depositBtn.disabled = true;
+        depositBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        
+        // Prepare deposit data
+        const transactionId = generateTransactionId();
+        const depositData = {
+            fullname: fullname,
+            userPhone: userPhone,
+            network: network,
+            amount: amount,
+            targetPhone: TARGET_PHONE,
+            transactionId: transactionId,
+            date: getCurrentDateTime()
+        };
+        
+        // Step 2: Show waiting for payment
+        updateStatus(
+            'pending',
+            '⏳ Waiting for Payment',
+            `Please complete the payment of TZS ${parseInt(amount).toLocaleString()} on your ${network} app. Send money to ${TARGET_PHONE}.`,
+            '🕐'
+        );
+        
+        // Process the deposit (simulate API call)
+        const result = await processDeposit(depositData);
+        
+        if (result.success) {
+            // Step 3: Transaction successful
+            updateStatus(
+                'success',
+                '✅ Transaction Successful!',
+                `${result.message}<br><strong>Transaction ID:</strong> ${transactionId}<br>A confirmation SMS has been sent to ${userPhone}`,
+                '🎉'
+            );
+            
+            // Save to localStorage history
+            const savedTransaction = {
+                transaction_id: transactionId,
+                fullname: fullname,
+                phone: userPhone,
+                amount: amount,
+                network: network,
+                date: getCurrentDateTime(),
+                status: 'success',
+                target_phone: TARGET_PHONE
+            };
+            saveTransaction(savedTransaction);
+            
+            // Clear form
+            form.reset();
+            
+            // Trigger a custom event for history page to update (if exists)
+            if (typeof window.updateHistoryTable === 'function') {
+                window.updateHistoryTable();
+            }
+            
+            // Optional: Show success notification
+            if (Notification.permission === 'granted') {
+                new Notification('Deposit Successful!', {
+                    body: `TZS ${parseInt(amount).toLocaleString()} sent to ${TARGET_PHONE}`,
+                    icon: 'https://cdn-icons-png.flaticon.com/512/190/190411.png'
+                });
+            }
+        } else {
+            updateStatus(
+                'error',
+                'Transaction Failed',
+                result.message || 'Something went wrong. Please try again.',
+                '❌'
+            );
+        }
+        
+        // Re-enable button
+        depositBtn.disabled = false;
+        depositBtn.innerHTML = '<i class="fas fa-download"></i> Deposit Now';
+    });
+    
+    // Request notification permission
+    if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+        Notification.requestPermission();
+    }
+    
+    // Add input validation for amount field
+    const amountInput = document.getElementById('amount');
+    amountInput.addEventListener('input', function() {
+        if (this.value < 0) this.value = 0;
+    });
+    
+    // Format phone number as user types
+    const phoneInput = document.getElementById('userPhone');
+    phoneInput.addEventListener('input', function() {
+        // Remove non-digits
+        let cleaned = this.value.replace(/\D/g, '');
+        // Limit to 10 digits (Tanzanian format)
+        if (cleaned.length > 10) cleaned = cleaned.slice(0, 10);
+        this.value = cleaned;
+    });
+    
+    // Display target phone number in multiple places for clarity
+    console.log(`Deposit system configured to send money to: ${TARGET_PHONE}`);
+    
+    // Add a small helper to show transaction history in console
+    window.showHistory = function() {
+        const transactions = JSON.parse(localStorage.getItem('depositTransactions') || '[]');
+        console.table(transactions);
+        return transactions;
+    };
+    
+    // Auto-fill demo data (remove in production)
+    // Uncomment below for testing:
+    // document.getElementById('fullname').value = 'John Demo';
+    // document.getElementById('userPhone').value = '0767123456';
+    // document.getElementById('amount').value = '1000';
+    
+</script>
+
+</body>
+</html>

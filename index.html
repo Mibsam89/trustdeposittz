@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Trustdeposit</title>
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* ========== GLOBAL STYLES ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9edf2 100%);
+            color: #1a2a3a;
+            line-height: 1.6;
+        }
+
+        /* ========== HEADER & NAVIGATION ========== */
+        header {
+            background: linear-gradient(135deg, #0a2e25 0%, #1a4a3a 100%);
+            color: white;
+            padding: 1rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .logo i {
+            color: #ff9800;
+            margin-right: 8px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 0;
+            font-size: 1.05rem;
+        }
+
+        nav ul li a:hover {
+            color: #ff9800;
+            border-bottom: 2px solid #ff9800;
+        }
+
+        /* ========== HERO SECTION ========== */
+        .hero {
+            background: linear-gradient(135deg, #0d3b2f 0%, #1b5e4a 100%);
+            color: white;
+            text-align: center;
+            padding: 5rem 2rem;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: #ff9800;
+            color: white;
+            padding: 12px 35px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #e68900;
+            transform: translateY(-3px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            padding: 12px 35px;
+            border: 2px solid white;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #1a4a3a;
+            transform: translateY(-3px);
+        }
+
+        /* ========== DEPOSIT FORM SECTION ========== */
+        .deposit-section {
+            max-width: 650px;
+            margin: 4rem auto;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .deposit-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .deposit-section h2 {
+            text-align: center;
+            color: #1a4a3a;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        .deposit-section h2 i {
+            color: #ff9800;
+            margin-right: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #ff9800;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255,152,0,0.1);
+        }
+
+        .deposit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #1a4a3a 0%, #0d3b2f 100%);
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 0.5rem;
+        }
+
+        .deposit-btn:hover {
+            background: linear-gradient(135deg, #0d3b2f 0%, #1a4a3a 100%);
+            transform: scale(1.02);
+        }
+
+        /* Status Message Box */
+        .status-box {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+
+        .status-box.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        /* ========== TRANSACTION HISTORY ========== */
+        .history-section {
+            max-width: 1300px;
+            margin: 3rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .history-section h2 {
+            text-align: center;
+            color: #1a4a3a;
+            margin-bottom: 1.5rem;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #1a4a3a;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        .status-success {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        /* ========== CONTACT SECTION ========== */
+        .contact-section {
+            background: white;
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 2.5rem;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .contact-section h2 {
+            text-align: center;
+            color: #1a4a3a;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .contact-card {
+            text-align: center;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .contact-card i {
+            font-size: 2.5rem;
+            color: #ff9800;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-card h3 {
+            color: #1a4a3a;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ========== FOOTER ========== */
+        footer {
+            background: linear-gradient(135deg, #0a2e25 0%, #1a4a3a 100%);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .social-links {
+            margin-bottom: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            margin: 0 10px;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: #ff9800;
+        }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                justify-content: center;
+                gap: 1rem;
+            }
+            
+            .deposit-section, .history-section, .contact-section {
+                margin: 2rem 1rem;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ========== HEADER / NAVIGATION ========== -->
+<header>
+    <div class="nav-container">
+        <div class="logo">
+            <i class="fas fa-money-bill-wave"></i><p><img src="logo.png" width="70px" height="70px"><sup>Trust Deposit</sup>    
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="web deposit.html"><i class="fas fa-arrow-down"></i> Deposit</a></li>
+                <li><a href="web transaction.html"><i class="fas fa-history"></i> Transactions</a></li>
+                <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
+                <li><a href="web log+depos.html" id="loginRegisterBtn"><i class="fas fa-user"></i> Login/Register</a></li>
+                <li><a href="withdraw.html"><i class="fas fa-envelope"></i> withdraw</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- ========== HERO SECTION ========== -->
+<section class="hero" id="home">
+    <h1>💰 Deposit money easily through your phone💶💵</h1>
+    <p>Secure • Fast • Reliable — Deposit money directly to 0767332532 from any mobile network</p>
+    <div class="hero-buttons">
+        <button class="btn-primary" onclick="scrollToDeposit()"><i class="fas fa-download"></i> Deposit Now</button>
+        <button class="btn-secondary" id="heroCreateAccount"><i class="fas fa-user-plus"></i><a href="web log+depos.html"> Create Account</a></button>
+    </div>
+</section>
+
+<!-- ========== DEPOSIT FORM ========== -->
+<section class="deposit-section" id="deposit">
+    <h2><i class="fas fa-hand-holding-usd"></i> Make a Deposit</h2>
+    <form id="depositForm">
+        <div class="form-group">
+            <label><i class="fas fa-user"></i> Full Name</label>
+            <input type="text" id="fullname" placeholder="Enter your full name" required>
+        </div>
+        
+        <div class="form-group">
+            <label><i class="fas fa-phone-alt"></i> Phone Number</label>
+            <input type="tel" id="phone" placeholder="e.g., 0767332532" value="0767332532" required>
+        </div>
+        
+        <div class="form-group">
+            <label><i class="fas fa-coins"></i> Amount (TZS)</label>
+            <input type="number" id="amount" placeholder="Enter amount" required min="100">
+        </div>
+        
+        <div class="form-group">
+            <label><i class="fas fa-globe"></i> Mobile Network</label>
+            <select id="network" required>
+                <option value="">-- Select Network --</option>
+                <option value="M-Pesa">📱 M-Pesa</option>
+                <option value="Airtel Money">📱 Airtel Money</option>
+                <option value="Tigo Pesa">📱 Tigo Pesa</option>
+                <option value="HaloPesa">📱 HaloPesa</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="deposit-btn"><i class="fas fa-check-circle"></i> Deposit Now</button>
+    </form>
+    <div id="statusMessage" class="status-box"></div>
+</section>
+
+<!-- ========== TRANSACTION HISTORY ========== -->
+<section class="history-section" id="history">
+    <h2><i class="fas fa-clock"></i> Transaction History</h2>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Transaction ID</th>
+                    <th>Phone Number</th>
+                    <th>Amount (TZS)</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="historyBody">
+                <tr><td colspan="5" style="text-align: center;">📭 No transactions yet. Make your first deposit!</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ========== CONTACT SECTION ========== -->
+<section class="contact-section" id="contact">
+    <h2><i class="fas fa-address-card"></i> Contact Us</h2>
+    <div class="contact-info">
+        <div class="contact-card">
+            <i class="fas fa-phone-alt"></i>
+            <h3>Phone</h3>
+            <p>0767 332 532</p>
+            <p>+255 767 332 532</p>
+        </div>
+        <div class="contact-card">
+            <i class="fas fa-envelope"></i>
+            <h3>Email</h3>
+            <p>support@deposithub.com</p>
+            <p>info@deposithub.com</p>
+        </div>
+        <div class="contact-card">
+            <i class="fas fa-clock"></i>
+            <h3>Support Hours</h3>
+            <p>Mon-Fri: 8AM - 8PM</p>
+            <p>Sat-Sun: 9AM - 5PM</p>
+        </div>
+    </div>
+    <div style="text-align: center; margin-top: 1rem; padding: 1rem; background: #f0f2f5; border-radius: 12px;">
+        <p><strong>⚠️ Important:</strong> All deposits are sent to our official number <strong style="color:#1a4a3a;">0767332532</strong>. You'll receive an SMS confirmation after each transaction.</p>
+    </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+    <div class="social-links">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-whatsapp"></i></a>
+    </div>
+    <p><i class="fas fa-phone-alt"></i> Contact: 0767332532 | <i class="fas fa-envelope"></i> support@trust deposit.com</p>
+    <p><i class="fas fa-copyright"></i> 2025 Trust Deposit - All Rights Reserved. Secure Mobile Deposits.</p>
+    <p style="margin-top: 0.5rem; font-size: 0.8rem;">Powered by M-Pesa, Airtel Money, Tigo Pesa & HaloPesa</p>
+</footer>
+
+<script>
+    // ========== JAVASCRIPT FUNCTIONALITY ==========
+    
+    // Smooth scroll to deposit section
+    function scrollToDeposit() {
+        document.getElementById('deposit').scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // Simulated transaction history (will connect to PHP later)
+    let transactions = [];
+    
+    // Function to display status messages
+    function showStatus(message, type) {
+        const statusDiv = document.getElementById('statusMessage');
+        statusDiv.innerHTML = message;
+        statusDiv.className = 'status-box show';
+        
+        if (type === 'success') {
+            statusDiv.style.backgroundColor = '#d4edda';
+            statusDiv.style.color = '#155724';
+            statusDiv.style.border = '1px solid #c3e6cb';
+        } else if (type === 'pending') {
+            statusDiv.style.backgroundColor = '#fff3cd';
+            statusDiv.style.color = '#856404';
+            statusDiv.style.border = '1px solid #ffeeba';
+        } else {
+            statusDiv.style.backgroundColor = '#f8d7da';
+            statusDiv.style.color = '#721c24';
+            statusDiv.style.border = '1px solid #f5c6cb';
+        }
+        
+        // Auto hide after 6 seconds
+        setTimeout(() => {
+            statusDiv.classList.remove('show');
+        }, 6000);
+    }
+    
+    // Load transaction history from localStorage (demo) - will be replaced by PHP
+    function loadTransactionHistory() {
+        const stored = localStorage.getItem('depositTransactions');
+        if (stored) {
+            transactions = JSON.parse(stored);
+        }
+        
+        const tbody = document.getElementById('historyBody');
+        if (transactions.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">📭 No transactions yet. Make your first deposit!</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = '';
+        transactions.slice().reverse().forEach(trans => {
+            const row = document.createElement('tr');
+            const statusClass = trans.status === 'success' ? 'status-success' : 'status-pending';
+            row.innerHTML = `
+                <td>${trans.transaction_id}</td>
+                <td>${trans.phone}</td>
+                <td>${parseInt(trans.amount).toLocaleString()} TZS</td>
+                <td>${trans.date}</td>
+                <td class="${statusClass}">${trans.status.toUpperCase()}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+    
+    // Process deposit
+    document.getElementById('depositForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const fullname = document.getElementById('fullname').value;
+        const phone = document.getElementById('phone').value;
+        const amount = document.getElementById('amount').value;
+        const network = document.getElementById('network').value;
+        
+        // Validation
+        if (!fullname || !phone || !amount || !network) {
+            showStatus('❌ Please fill all fields!', 'error');
+            return;
+        }
+        
+        if (amount < 100) {
+            showStatus('❌ Minimum deposit amount is 100 TZS', 'error');
+            return;
+        }
+        
+        // Show pending status
+        showStatus('⏳ Deposit received, waiting for payment confirmation... Please complete payment on your phone.', 'pending');
+        
+        // Simulate API call to PHP backend
+        // For demo, we'll create a local transaction
+        const transaction_id = 'TXN' + Date.now() + Math.floor(Math.random() * 1000);
+        const currentDate = new Date().toLocaleString();
+        
+        // Target phone number where money is sent
+        const targetPhone = "0767332532";
+        
+        // Simulate success after 2 seconds (in real system, wait for payment)
+        setTimeout(() => {
+            // This would be the response from process_deposit.php
+            const newTransaction = {
+                transaction_id: transaction_id,
+                phone: phone,
+                amount: amount,
+                date: currentDate,
+                status: 'success',
+                network: network,
+                fullname: fullname
+            };
+            
+            transactions.push(newTransaction);
+            localStorage.setItem('depositTransactions', JSON.stringify(transactions));
+            
+            showStatus(`✅ DEPOSIT SUCCESSFUL! Amount: ${parseInt(amount).toLocaleString()} TZS has been received on ${targetPhone}. Transaction ID: ${transaction_id}`, 'success');
+            
+            // Clear form
+            document.getElementById('depositForm').reset();
+            
+            // Reload transaction history
+            loadTransactionHistory();
+        }, 2000);
+    });
+    
+    // Create Account button
+    document.getElementById('createAccountBtn')?.addEventListener('click', function() {
+        alert("📝 ACCOUNT REGISTRATION\n\nTo create an account:\n1. Send 'REGISTER YourName' to 0767332532\n2. Or email support@deposithub.com\n3. Our agent will contact you within 10 minutes.\n\nRegistration is FREE!");
+    });
+    
+    document.getElementById('heroCreateAccount')?.addEventListener('click', function() {
+        alert("📝 ACCOUNT REGISTRATION\n\nTo create an account:\n1. Send 'REGISTER YourName' to 0767332532\n2. Or email support@deposithub.com\n3. Our agent will contact you within 10 minutes.\n\nRegistration is FREE!");
+    });
+    
+    document.getElementById('loginRegisterBtn')?.addEventListener('click', function() {
+        alert("🔐 LOGIN / REGISTER\n\nExisting users: Login using your phone number and password.\nNew users: Click 'Create Account' to register.\n\nDemo credentials:\nPhone: 0767332532\nPassword: demo123\n\nFull system coming soon!");
+    });
+    
+    // Initialize - load transaction history
+    loadTransactionHistory();
+</script>
+
+</body>
+</html>
